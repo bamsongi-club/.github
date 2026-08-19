@@ -6,7 +6,7 @@
 
 알밤메이트를 만들며 각자 맡은 기능의 설계·구현·테스트·측정을 책임집니다.
 
-[서비스 체험하기](https://bamsongiclub.cloud) · [프로젝트 저장소](https://github.com/bamsongi-club/albam-mate) · [로컬 실행·테스트 가이드](https://github.com/bamsongi-club/albam-mate/blob/8e25bbc6ee2c1b68aa28247b9c2fdbf7b8e88784/README.md#10분-안에-첫-green) · [Second Brain Demo](https://github.com/bamsongi-club/bamsongi-brain-demo)
+[서비스 체험하기](https://bamsongiclub.cloud) · [프로젝트 저장소](https://github.com/bamsongi-club/albam-mate) · [로컬 실행·테스트 가이드](https://github.com/bamsongi-club/albam-mate/blob/8e25bbc6ee2c1b68aa28247b9c2fdbf7b8e88784/README.md#10분-안에-첫-green) · [팀원별 문제 해결](#팀원별-문제-해결과-판단) · [Second Brain Demo](https://github.com/bamsongi-club/bamsongi-brain-demo)
 
 ## 대표 프로젝트 · 알밤메이트
 
@@ -45,6 +45,13 @@
 | 상시 데모 배포 | 단일 EC2 · 이중화와 자동 확장을 두지 않은 비용 우선 구성 |
 
 [현재 제공 상태](https://github.com/bamsongi-club/albam-mate/blob/8e25bbc6ee2c1b68aa28247b9c2fdbf7b8e88784/README.md#현재-제공-상태) · [아키텍처](https://github.com/bamsongi-club/albam-mate/blob/8e25bbc6ee2c1b68aa28247b9c2fdbf7b8e88784/docs/ARCHITECTURE.md)
+
+## 팀의 협업과 검증 기준
+
+- 구현·검증·배포·측정을 같은 완료 상태로 묶지 않습니다.
+- 성능 수치는 환경·조건·실패 구간과 함께 기록합니다.
+- 회의에서 나온 의견은 코드·ADR·Issue와 대조한 뒤 사람이 결정합니다.
+- 확인하지 못한 범위는 완료로 표현하지 않고 후속 검증으로 남깁니다.
 
 ## 팀
 
@@ -94,12 +101,15 @@ p95는 3,034.1 ms에서 9.7 ms로 줄었지만, 여러 조회를 섞은 부하�
 pool 병목과 전달 실패를 각각 다른 후속 검증 범위로 나눴습니다.
 [채팅 반복 측정](https://github.com/bamsongi-club/albam-mate/blob/8e25bbc6ee2c1b68aa28247b9c2fdbf7b8e88784/docs/measurements/k6/eungi/chat-delivery-capacity-2026-08-13-repeat2.md)
 
-## 회의 기록을 결정으로 바꾸는 과정
+## 팀의 판단을 축적하는 Second Brain
 
-**회의 원문 보존 → 결정 후보 정리 → 프로젝트 근거 대조 → 사람 검수**
+### 회의 기록을 결정으로 바꾸는 과정
 
-회의록을 곧바로 결정으로 올리지 않습니다. AI는 후보 탐색과 초안을 보조하고, 사실 판정과 채택·보류·공개
-여부는 사람이 정합니다.
+**회의 원문 보존 → 결정 후보 정리 → 프로젝트 정본 대조 → 사람 검수 → 공개 범위 분리**
+
+회의록을 곧바로 결정으로 올리지 않습니다. Private Second Brain에는 원문과 결정 후보를 분리해 보존하고,
+현재 계약은 프로젝트의 코드·ADR·Issue와 대조합니다. AI는 후보 탐색과 초안을 보조하지만, 사실 판정과
+채택·보류·공개 여부는 사람이 정합니다.
 
 <p align="center">
   <img
@@ -111,7 +121,12 @@ pool 병목과 전달 실패를 각각 다른 후속 검증 범위로 나눴습�
 
 <p align="center"><sub>실제 팀 운영에 사용한 Private Second Brain의 그래프입니다. 2026-08-18 캡처 · 문서 제목·본문·내부 경로 미표시</sub></p>
 
-공개한 [Bamsongi Brain Demo](https://github.com/bamsongi-club/bamsongi-brain-demo)는 실제 자료를 복제하거나
-익명화한 저장소가 아닙니다. 합성 자료와 공개 GitHub 근거로 같은 운영 흐름을 재현했습니다.
+Second Brain은 회의록 보관함에 머물지 않습니다. 대체된 결정과 아직 확인하지 못한 항목을 함께 남기고,
+프로젝트 정본이 바뀌면 현재 상태를 다시 대조합니다. 공개할 때는 원문을 옮기지 않고 공개 GitHub 근거로
+판정을 다시 구성합니다.
 
-[Demo 실행 방법](https://github.com/bamsongi-club/bamsongi-brain-demo#4-직접-실행할-명령) · [사람이 승인한 실제 사례](https://github.com/bamsongi-club/bamsongi-brain-demo/blob/main/case-studies/albam-mate-decision-state-vs-verification-state.md)
+공개한 [Bamsongi Brain Demo](https://github.com/bamsongi-club/bamsongi-brain-demo)는 실제 자료를 복제하거나
+익명화한 저장소가 아닙니다. 공개 GitHub 근거만으로 결정 상태, 구현·검증 단계와 사람 승인 게이트를
+재현했습니다.
+
+[데모 실행하기](https://github.com/bamsongi-club/bamsongi-brain-demo#바로-실행하기) · [공개 사례 전체 보기](https://github.com/bamsongi-club/bamsongi-brain-demo/blob/main/cases/README.md)
