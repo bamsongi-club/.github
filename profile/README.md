@@ -6,7 +6,7 @@
 
 알밤메이트를 만들며 각자 맡은 기능의 설계·구현·테스트·측정을 책임집니다.
 
-[서비스 체험하기](https://bamsongiclub.cloud) · [프로젝트 저장소](https://github.com/bamsongi-club/albam-mate) · [로컬 실행·테스트 가이드](https://github.com/bamsongi-club/albam-mate/blob/8e25bbc6ee2c1b68aa28247b9c2fdbf7b8e88784/README.md#10분-안에-첫-green) · [팀원별 문제 해결](#팀원별-문제-해결과-판단) · [Second Brain Demo](https://github.com/bamsongi-club/bamsongi-brain-demo)
+[서비스 체험하기](https://bamsongiclub.cloud) · [프로젝트 저장소](https://github.com/bamsongi-club/albam-mate) · [로컬 실행·테스트 가이드](https://github.com/bamsongi-club/albam-mate/blob/8e25bbc6ee2c1b68aa28247b9c2fdbf7b8e88784/README.md#10분-안에-첫-green) · [팀원별 문제 해결](#팀원별-문제-해결과-판단) · [부하 검증 환경](#측정에-사용한-부하-검증-환경) · [Second Brain Demo](https://github.com/bamsongi-club/bamsongi-brain-demo)
 
 ## 대표 프로젝트 · 알밤메이트
 
@@ -41,7 +41,7 @@
 | 데이터·보안 | PostgreSQL · Flyway · Redis · Spring Security · Spring Session |
 | 실시간·비동기 | WebSocket · Redis Pub/Sub · Transactional Outbox |
 | 검증·관측 | JUnit 5 · Testcontainers · k6 · Actuator · Micrometer OTLP |
-| 부하 검증 환경 | 캠페인별 격리 AWS 스택 · App 2대 · PostgreSQL · Redis · 전용 k6 발생기 |
+| 부하 검증 환경 | [캠페인별 격리 AWS 스택](#측정에-사용한-부하-검증-환경) · App 2대 · PostgreSQL · Redis · 전용 k6 발생기 |
 | 상시 데모 배포 | 단일 EC2 · 이중화와 자동 확장을 두지 않은 비용 우선 구성 |
 
 [현재 제공 상태](https://github.com/bamsongi-club/albam-mate/blob/8e25bbc6ee2c1b68aa28247b9c2fdbf7b8e88784/README.md#현재-제공-상태) · [아키텍처](https://github.com/bamsongi-club/albam-mate/blob/8e25bbc6ee2c1b68aa28247b9c2fdbf7b8e88784/docs/ARCHITECTURE.md)
@@ -100,6 +100,28 @@ p95는 3,034.1 ms에서 9.7 ms로 줄었지만, 여러 조회를 섞은 부하�
 성립했습니다. 이 차이를 근거로 채팅 용량을 하나의 성공률로 묶지 않고, 동시 handshake의 DB connection
 pool 병목과 전달 실패를 각각 다른 후속 검증 범위로 나눴습니다.
 [채팅 반복 측정](https://github.com/bamsongi-club/albam-mate/blob/8e25bbc6ee2c1b68aa28247b9c2fdbf7b8e88784/docs/measurements/k6/eungi/chat-delivery-capacity-2026-08-13-repeat2.md)
+
+## 측정에 사용한 부하 검증 환경
+
+위 측정은 캠페인별로 격리한 임시 AWS 스택에서 실행했습니다. 그 스택의 Terraform·Ansible·CloudWatch 구성을
+[Albam Mate Infrastructure Reference](https://github.com/bamsongi-club/albam-mate-infra-reference)로
+공개했습니다. 운영 정본은 비공개 저장소에 남아 있고, 공개본은 2026-08-20 시점을 떼어 정제한 날짜 고정
+스냅샷입니다.
+
+| 구분 | 내용 |
+| --- | --- |
+| 구성 | App1 Nginx 단일 진입점 · Spring EC2 2대 · PostgreSQL · Redis · 분리된 VPC의 k6 발생기 |
+| 인스턴스 | ARM64 Amazon Linux 2023 `t4g.micro` 4대 · CPU credit `standard` |
+| 측정 조건 | ALB·NAT Gateway·Auto Scaling Group을 두지 않아 스케일 이벤트가 before/after를 흔들지 않습니다 |
+| 수명 | `bootstrap → rebase → deploy → loadtest → destroy` · teardown 후 잔존 0건을 재조회로 확인합니다 |
+| 자격증명 없는 검증 | `mock_provider`를 쓰는 Terraform 계약 테스트와 공개 경계 검사를 새 clone에서 그대로 실행할 수 있습니다 |
+
+이 저장소도 완료 상태를 하나로 묶지 않습니다. 항목마다 `planned`·`implemented`·`verified`·`deployed`·
+`measured`·`teardown`을 각각 적었습니다. 공개 스냅샷 자체의 확인 범위는 2026-08-20
+`apply → deploy → 내부 health → destroy` 완주까지이고, `rebase`(이미지 빌드)와 `loadtest`까지 이어서
+완주한 검증은 아닙니다.
+
+[증거 상태](https://github.com/bamsongi-club/albam-mate-infra-reference/blob/main/docs/EVIDENCE_STATUS.md) · [설계 판단과 한계](https://github.com/bamsongi-club/albam-mate-infra-reference/blob/main/docs/DESIGN_DECISIONS.md) · [스냅샷 출처](https://github.com/bamsongi-club/albam-mate-infra-reference/blob/main/SOURCE_SNAPSHOT.md)
 
 ## 팀의 판단을 축적하는 Second Brain
 
